@@ -1,6 +1,6 @@
 package com.airgear.service.impl;
 
-import com.airgear.model.CustomUserDetailsService;
+import com.airgear.model.CustomUserDetails;
 import com.airgear.model.User;
 import com.airgear.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +24,6 @@ public class UserServiceImpl implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email '" + email + "' not found"));
 
-        return new CustomUserDetailsService(user);
+        return new CustomUserDetails(user);
     }
 }

@@ -24,6 +24,13 @@
         <mysql.test.version>1.19.7</mysql.test.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
 
         <dependency>
@@ -141,6 +148,12 @@
             <artifactId>mysql</artifactId>
             <version>${mysql.test.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.bithub7</groupId>
+            <artifactId>airgear.model</artifactId>
+            <version>v1.1.7</version>
         </dependency>
 
     </dependencies>
