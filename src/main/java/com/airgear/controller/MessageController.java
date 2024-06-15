@@ -1,12 +1,11 @@
 package com.airgear.controller;
 
-import com.airgear.util.Routes;
 import com.airgear.config.rabbitmq.RabbitmqProperties;
-import com.airgear.exceptions.MessageExceptions;
 import com.airgear.dto.MessageChangeTextRequest;
-import com.airgear.dto.MessageSaveRequest;
 import com.airgear.dto.MessageResponse;
+import com.airgear.dto.MessageSaveRequest;
 import com.airgear.service.MessageService;
+import com.airgear.util.Routes;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -14,9 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.UUID;
@@ -39,20 +36,13 @@ public class MessageController {
         this.amqpTemplate = amqpTemplate;
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<MessageResponse> create(@RequestBody @Valid MessageSaveRequest request,
-                                                  UriComponentsBuilder ucb) {
+    public void create(@RequestBody @Valid MessageSaveRequest request) {
         amqpTemplate.convertAndSend(rabbitmqProperties.getExchange(), rabbitmqProperties.getKey(), request);
-        MessageResponse response = messageService.getMessageByText(request.text())
-                .orElseThrow(() -> MessageExceptions.messageNotFound(request.text()));
-
-        return ResponseEntity
-                .created(ucb.path("/{id}").build(response.id()))
-                .body(response);
     }
 
     @GetMapping(
@@ -74,7 +64,8 @@ public class MessageController {
                 .orElseThrow(() -> messageNotFound(messageId));
     }
 
-    @PatchMapping(
+    //@PatchMapping(
+    @PutMapping(
             value = "/{messageId}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE

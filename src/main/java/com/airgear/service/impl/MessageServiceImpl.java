@@ -81,12 +81,14 @@ public class MessageServiceImpl implements MessageService {
     private Message save(MessageSaveRequest request) {
         Goods goods = getGoods(request.goodsId());
         User user = getUser(request.userId());
-        return new Message(
+        Message message = new Message(
                 request.text(),
                 goods,
                 user,
                 OffsetDateTime.now()
         );
+        messageRepository.save(message);
+        return message;
     }
 
     private Goods getGoods(long goodsId) {
